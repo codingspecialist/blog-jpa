@@ -15,6 +15,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/love/**")
                 .addPathPatterns("/reply/**")
                 .addPathPatterns("/api/**")
-                .excludePathPatterns("/board/{id:\\d+}");
+                .excludePathPatterns("/board/{id:\\d+}")
+                .excludePathPatterns("/api/check-username-available/**");
     }
 }
