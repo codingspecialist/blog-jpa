@@ -2,8 +2,10 @@ package shop.mtcoding.blog.board;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +19,7 @@ public class BoardController {
     private final HttpSession session;
 
     @PostMapping("/board/{id}/update")
-    public String update(@PathVariable("id") Integer id, BoardRequest.UpdateDTO reqDTO) {
+    public String update(@PathVariable("id") Integer id, @Valid BoardRequest.UpdateDTO reqDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         boardService.글수정하기(reqDTO, id, sessionUser.getId());
 
@@ -64,7 +66,7 @@ public class BoardController {
     }
 
     @PostMapping("/board/save")
-    public String save(BoardRequest.SaveDTO saveDTO) {
+    public String save(@Valid BoardRequest.SaveDTO saveDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         boardService.글쓰기(saveDTO, sessionUser);
         return "redirect:/";

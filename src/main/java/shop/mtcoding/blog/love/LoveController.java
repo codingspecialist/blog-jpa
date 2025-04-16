@@ -1,7 +1,9 @@
 package shop.mtcoding.blog.love;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.blog._core.util.Resp;
 import shop.mtcoding.blog.user.User;
@@ -13,7 +15,7 @@ public class LoveController {
     private final HttpSession session;
 
     @PostMapping("/api/love")
-    public Resp<?> saveLove(@RequestBody LoveRequest.SaveDTO reqDTO) {
+    public Resp<?> saveLove(@RequestBody @Valid LoveRequest.SaveDTO reqDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         LoveResponse.SaveDTO respDTO = loveService.좋아요(reqDTO, sessionUser.getId());
 

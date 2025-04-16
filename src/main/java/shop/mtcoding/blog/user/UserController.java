@@ -7,15 +7,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import shop.mtcoding.blog._core.error.ex.Exception400;
 import shop.mtcoding.blog._core.util.Resp;
 
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -31,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/user/update")
-    public String update(UserRequest.UpdateDTO updateDTO) {
+    public String update(@Valid UserRequest.UpdateDTO updateDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
         // update user_tb set password = ?, email = ? where id = ?
         User userPS = userService.회원정보수정(updateDTO, sessionUser.getId());
@@ -53,15 +50,6 @@ public class UserController {
 
     @PostMapping("/join")
     public String join(@Valid UserRequest.JoinDTO joinDTO, Errors errors) {
-        if (errors.hasErrors()) {
-            List<FieldError> fErrors = errors.getFieldErrors();
-
-            for (FieldError fieldError : fErrors) {
-                throw new Exception400(fieldError.getField() + ":" + fieldError.getDefaultMessage());
-            }
-        }
-
-
 //        boolean r1 = Pattern.matches("^[a-zA-Z0-9]{2,20}$", joinDTO.getUsername());
 //        boolean r2 = Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()])[a-zA-Z\\d!@#$%^&*()]{6,20}$", joinDTO.getPassword());
 //        boolean r3 = Pattern.matches("^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,3}$", joinDTO.getEmail());
@@ -81,14 +69,6 @@ public class UserController {
 
     @PostMapping("/login")
     public String login(@Valid UserRequest.LoginDTO loginDTO, Errors errors, HttpServletResponse response) {
-        if (errors.hasErrors()) {
-            List<FieldError> fErrors = errors.getFieldErrors();
-
-            for (FieldError fieldError : fErrors) {
-                throw new Exception400(fieldError.getField() + ":" + fieldError.getDefaultMessage());
-            }
-        }
-
         //System.out.println(loginDTO);
         User sessionUser = userService.로그인(loginDTO);
         session.setAttribute("sessionUser", sessionUser);
